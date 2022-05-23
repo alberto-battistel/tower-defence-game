@@ -12,6 +12,7 @@ import enum
 import pygame
  
 SCREENRECT = pygame.Rect(0,0,1024,800)
+MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_RIGHT = 1, 2, 3
 
 class GameState(enum.Enum):
 	"""
@@ -115,6 +116,47 @@ class TowerGame:
 		pygame.font.init()
 		self.screen = screen
 		self.set_state(GameState.initialized)	
+
+
+@dataclass
+class GameLoop:
+	game: TowerGame
+	
+	def handle_events(self):
+		"""
+		Sample event handler that ensures quit events and normal event 
+		loop processing takes place. Without this the game will hang and 
+		repaints by the operating system will not happen, causing the 
+		game window to hang.
+		"""
+		for event in pygame.event.get():
+			if (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) or
+				event.type == pygame.QUIT:
+				self.set_state(GameState.quitting)
+			# Delegates the event to a sub-event handler 'handle_event'
+			self.handle_event(event)
+			
+	def loop(self):
+		while self.state != GameState.quitting:
+			self.handle_events()
+			
+	def handle_event(self):
+		"""
+		Handles a singular event.
+		"""
+		
+	# Convenient shortcut
+	def set_state(self, new_state):
+		self.game.set_state(new_state)
+	
+	@property
+	def screen(self):
+		return self.game.screen
+		
+	@property
+	def state(self):
+		return self.game.state
+		
 
 def start_game():
     game = TowerGame.create()
