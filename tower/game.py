@@ -6,7 +6,7 @@
 # -*- coding: utf-8 -*-
 #
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import enum
  
 import pygame
@@ -55,7 +55,7 @@ class TowerGame:
 	screen_rect: pygame.Rect
 	fullscreen: bool
 	state: GameState
-	
+	game_menu: GameLoop = field(init=False, default=None)
 	
 	@classmethod
 	def create(cls, fullscreen=False):
@@ -87,19 +87,6 @@ class TowerGame:
 		self.set_state(GameState.main_menu)
 		self.loop()
 	
-	def loop(self):
-		while self.state != GameState.quitting:
-			if self.state == GameState.main_menu:
-				# pass control to the game menu's loop
-			elif self.state == GameState.map_editing:
-				# ...etc...
-			elif self.state == GameState.game_playing:
-				# ...etc...
-		self.quit()
-		
-	def quit(self):
-		pygame.quit()
-		
 	def init(self):
 		self.assert_state_is(GameState.initializing)
 		pygame.init()
@@ -115,7 +102,21 @@ class TowerGame:
 			)
 		pygame.font.init()
 		self.screen = screen
-		self.set_state(GameState.initialized)	
+		self.game_menu = GameMenu(game=self)
+		self.set_state(GameState.initialized)
+		
+	def loop(self):
+		while self.state != GameState.quitting:
+			if self.state == GameState.main_menu:
+				self.game_menu.loop()
+			elif self.state == GameState.map_editing:
+				# ...etc...
+			elif self.state == GameState.game_playing:
+				# ...etc...
+		self.quit()
+		
+	def quit(self):
+		pygame.quit()	
 
 
 @dataclass
@@ -156,8 +157,16 @@ class GameLoop:
 	@property
 	def state(self):
 		return self.game.state
-		
 
+		
+class GameMenu(GameLoop):
+	pass
+
+
+class GameEditing(GameLoop):
+	pass
+	
+	
 def start_game():
     game = TowerGame.create()
     game.loop()
