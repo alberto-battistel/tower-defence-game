@@ -20,7 +20,7 @@ class GameState(enum.Enum):
 	"""
 	
 	# Unknown state, indicating possible error or misconfiguration
-	ukknown = "unknown"
+	unknown = "unknown"
 	# The state the game engine would rightfully be set to before 
 	# anything is initialized or configured.
 	initializing = "initializing"
