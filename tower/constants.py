@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 
+import pygame
+
+SCREENRECT = pygame.Rect(0,0,1024,800)
+MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_RIGHT = 1, 2, 3
+DESIRED_FPS = 40
+
 # Mapping of sprite ID to asset filename
 SPRITES = {
     "game_logo": "game_logo.png",
@@ -40,3 +46,21 @@ SPRITES = {
     "turret": "tower.png",
     "projectile": "rock.png",
 }
+
+# Holds the converted and imported sprite images. The key is a tuple
+# of (flipped_x, flipped_y, sprite_name)
+IMAGE_SPRITES: Dict[Tuple[bool, bool, str], pg.Surface] = {}
+
+SOUNDS = {
+    "footstep_1": "footstep01.ogg",
+    "footstep_2": "footstep02.ogg",
+    "footstep_3": "footstep03.ogg",
+    "footstep_4": "footstep04.ogg",
+    "thud": "thud.wav",
+    "beep": "beep.ogg",
+}
+
+# Sound IDs to what they're used as.
+SOUND_TURRET = "thud"
+SOUND_FOOTSTEPS = "footstep_4"
+SOUND_ESCAPED = "beep"
